@@ -23,40 +23,62 @@ import { getFeeds } from '../../services/middlewares/getFeeds';
 import { getOrders } from '../../services/middlewares/getOrders';
 import { getUser } from '../../services/middlewares/getUserData';
 import { getCookie } from '../../utils/cookie';
+import { ProtectedRoute } from '../../services/protectedRoute';
+import { setAuthChecked } from '../../slices/authSlice';
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuthChecked = useSelector((state) => state.auth.isAuthChecked);
 
   useEffect(() => {
-    dispatch(getIngredients());
-    dispatch(getFeeds());
-    if (getCookie('accessToken')) {
-      dispatch(getUser());
-      dispatch(getOrders());
-    }
-  }, []);
-  /** TODO: взять переменные из стора */
-  const isIngredientsLoading = useSelector(
-    (state) => state.ingredients.isLoading
-  );
-  const ingredients = useSelector((state) => state.ingredients.ingredients);
-  const error = useSelector((state) => state.ingredients.error);
+    const init = async () => {
+      try {
+        await dispatch(getIngredients());
+        await dispatch(getFeeds());
 
-  const navigate = useNavigate();
+        const token = getCookie('accessToken');
+
+        if (token) {
+          await dispatch(getUser());
+          await dispatch(getOrders());
+        }
+      } finally {
+        dispatch(setAuthChecked(true));
+      }
+    };
+
+    init();
+  }, []);
+
 
   return (
     <Routes>
       <Route element={<HeaderLayout />}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='*' element={<NotFound404 />} />
+
+        <Route element={<ProtectedRoute onlyAuth={false} />}>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/orders' element={<ProfileOrders />} />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <Modal onClose={() => navigate(-1)} title='Детали заказа'>
+                {' '}
+                <OrderInfo />{' '}
+              </Modal>
+            }
+          />
+        </Route>
+
         <Route
           path='/feed/:number'
           element={
@@ -75,15 +97,8 @@ const App = () => {
             </Modal>
           }
         />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <Modal onClose={() => navigate(-1)} title='Детали заказа'>
-              {' '}
-              <OrderInfo />{' '}
-            </Modal>
-          }
-        />
+
+        <Route path='*' element={<NotFound404 />} />
       </Route>
     </Routes>
   );

@@ -12,7 +12,7 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const constructorItems = useSelector((state) => state.burgerConstructor);
 
-  const orderRequest = useSelector((state) => state.orders.isLoading);
+  const orderRequest = useSelector((state) => state.orders.ordersLoading);
   const orderModalData = useSelector((state) => state.orders.newOrder);
   const navigate = useNavigate();
 
@@ -31,8 +31,10 @@ export const BurgerConstructor: FC = () => {
   };
 
   const closeOrderModal = () => {
-    dispatch(clearOrder());
-    dispatch(clearConstructor());
+    if (orderModalData) {
+      dispatch(clearOrder());
+      dispatch(clearConstructor());
+    }
   };
 
   const price = useMemo(

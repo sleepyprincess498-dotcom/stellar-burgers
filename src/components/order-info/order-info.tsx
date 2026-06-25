@@ -15,12 +15,6 @@ export const OrderInfo: FC = () => {
 
   const allIngredient = useSelector((state) => state.ingredients.ingredients);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, []);
-
   const ingredients = (orderData?.ingredients
     .map((id) => allIngredient.find((item) => item._id === id))
     .filter(Boolean) ?? []) as TIngredient[];

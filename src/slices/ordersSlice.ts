@@ -13,6 +13,7 @@ interface TOrderState {
   total: number;
   totalToday: number;
   isLoading: boolean;
+  ordersLoading: boolean;
   error: string | null;
 }
 
@@ -23,6 +24,7 @@ const initialState: TOrderState = {
   total: 0,
   totalToday: 0,
   isLoading: false,
+  ordersLoading: false,
   error: null
 };
 
@@ -60,13 +62,14 @@ export const ordersSlice = createSlice({
       })
 
       .addCase(createOrder.pending, (state) => {
-        state.isLoading = true;
+        state.ordersLoading = true;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        (state.isLoading = false), (state.newOrder = action.payload.order);
+        (state.ordersLoading = false), (state.newOrder = action.payload.order);
       })
       .addCase(createOrder.rejected, (state) => {
-        (state.isLoading = false), (state.error = 'Ошибка создания заказа.');
+        (state.ordersLoading = false),
+          (state.error = 'Ошибка создания заказа.');
       })
 
       .addCase(getOrderByNumber.pending, (state) => {

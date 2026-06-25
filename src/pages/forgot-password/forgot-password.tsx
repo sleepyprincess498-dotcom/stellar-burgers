@@ -15,10 +15,9 @@ export const ForgotPassword: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    dispatch(forgotPassword({email}));
 
     setError(null);
-    forgotPasswordApi({ email })
+    dispatch(forgotPassword({ email }))
       .then(() => {
         localStorage.setItem('resetPassword', 'true');
         navigate('/reset-password', { replace: true });

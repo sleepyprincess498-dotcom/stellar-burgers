@@ -12,6 +12,7 @@ interface TAuthState {
   user: null | TUser;
   token: null | string;
   isLoading: boolean;
+  isAuthChecked: boolean;
   isAuth: boolean;
   error: null | string;
 }
@@ -20,6 +21,7 @@ const initialState: TAuthState = {
   user: null,
   token: null,
   isLoading: false,
+  isAuthChecked: false,
   isAuth: false,
   error: null
 };
@@ -27,7 +29,11 @@ const initialState: TAuthState = {
 export const authSlice = createSlice({
   name: 'authSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthChecked: (state, action) => {
+      state.isAuthChecked = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
@@ -80,14 +86,18 @@ export const authSlice = createSlice({
 
       .addCase(getUser.pending, (state) => {
         state.isLoading = true;
+        state.isAuthChecked = false;
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuth = true;
         state.user = action.payload.user;
+        state.isAuthChecked = true;
       })
       .addCase(getUser.rejected, (state) => {
+        state.isLoading = false;
         state.error = 'Ошибка!';
+        state.isAuthChecked = true;
       })
 
       .addCase(updateUserData.pending, (state) => {
@@ -95,6 +105,7 @@ export const authSlice = createSlice({
       })
       .addCase(updateUserData.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.user = action.payload.user;
       })
       .addCase(updateUserData.rejected, (state) => {
         state.isLoading = false;
@@ -114,3 +125,5 @@ export const authSlice = createSlice({
       });
   }
 });
+
+export const { setAuthChecked } = authSlice.actions;

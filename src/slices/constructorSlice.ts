@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
-import { v4 as uuidv4 } from 'uuid';
 
 interface TConstructorState {
   bun: TIngredient | null;
@@ -22,8 +21,8 @@ export const constructorSlice = createSlice({
 
     addIngredient: (state, action) => {
       state.ingredients.push({
-        ...action.payload,
-        id: uuidv4()
+        ...action.payload.ingredient,
+        id: action.payload.id
       });
     },
 

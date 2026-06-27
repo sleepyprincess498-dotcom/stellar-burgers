@@ -14,6 +14,7 @@ interface TOrderState {
   totalToday: number;
   isLoading: boolean;
   ordersLoading: boolean;
+  findedOrder: TOrder[];
   error: string | null;
 }
 
@@ -25,6 +26,7 @@ const initialState: TOrderState = {
   totalToday: 0,
   isLoading: false,
   ordersLoading: false,
+  findedOrder: [],
   error: null
 };
 
@@ -75,8 +77,9 @@ export const ordersSlice = createSlice({
       .addCase(getOrderByNumber.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getOrderByNumber.fulfilled, (state) => {
+      .addCase(getOrderByNumber.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.findedOrder = action.payload.orders;
       })
       .addCase(getOrderByNumber.rejected, (state) => {
         state.error = 'Ошибка! Заказ не найден.';

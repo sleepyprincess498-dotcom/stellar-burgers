@@ -4,20 +4,23 @@ import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 export const ProtectedRoute = ({onlyAuth = true}) => {
-  const user = useSelector((s) => s.auth.user);
+  const isAuth = useSelector((s) => s.auth.isAuth);
   const isAuthChecked = useSelector((state) => state.auth.isAuthChecked)
+  const location = useLocation();
 
   if (!isAuthChecked) {
     return <Preloader />;
   }
 
-  if (onlyAuth && !user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+  if(isAuth === onlyAuth) {
+    return <Outlet />
+  } else {
+    return (
+      isAuth ? 
+        <Navigate to='/' replace state={{from: location}} /> :
+        <Navigate to='/login' replace  state={{from: location}}/>
+    )
   }
 
-  if (!onlyAuth && user) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <Outlet />;
+  
 };

@@ -2,33 +2,38 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector } from '../../services/store';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from '../../services/store';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { getOrderByNumber } from '../../services/middlewares/getOrderByNumber';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams();
-  const orders = useSelector((state) => state.orders.orders);
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const order = useSelector((state) => state.orders.findedOrder)[0];
+  const isLoading = useSelector((state) => state.orders.isLoading);
+   const location = useLocation();
+  const from = location.state.from.pathname ?? '/';
 
-  const orderData = orders.find((order) => order.number === Number(number));
+  useEffect(() => {
+    dispatch(getOrderByNumber(Number(number)));
+  }, [])
 
   const allIngredient = useSelector((state) => state.ingredients.ingredients);
 
-  const ingredients = (orderData?.ingredients
+  const ingredients = (order?.ingredients
     .map((id) => allIngredient.find((item) => item._id === id))
     .filter(Boolean) ?? []) as TIngredient[];
 
   const orderInfo = useMemo(() => {
-    if (!orderData || !ingredients.length) return null;
+    if (!order || !ingredients.length) return null;
 
-    const date = new Date(orderData.createdAt);
+    const date = new Date(order.createdAt);
 
     type TIngredientsWithCount = {
       [key: string]: TIngredient & { count: number };
     };
 
-    const ingredientsInfo = orderData.ingredients.reduce(
+    const ingredientsInfo = order.ingredients.reduce(
       (acc: TIngredientsWithCount, item) => {
         if (!acc[item]) {
           const ingredient = ingredients.find((ing) => ing._id === item);
@@ -53,16 +58,18 @@ export const OrderInfo: FC = () => {
     );
 
     return {
-      ...orderData,
+      ...order,
       ingredientsInfo,
       date,
       total
     };
-  }, [orderData, ingredients]);
+  }, [order, ingredients]);
 
-  if (!orderInfo) {
+  if (isLoading) {
     return <Preloader />;
   }
+
+  if(!orderInfo) return <Navigate to={from} replace />
 
   return <OrderInfoUI orderInfo={orderInfo} />;
 };

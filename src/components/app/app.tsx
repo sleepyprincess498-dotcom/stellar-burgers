@@ -29,7 +29,6 @@ import { setAuthChecked } from '../../slices/authSlice';
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuthChecked = useSelector((state) => state.auth.isAuthChecked);
 
   useEffect(() => {
     const init = async () => {

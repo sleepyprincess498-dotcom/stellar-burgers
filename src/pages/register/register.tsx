@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../services/middlewares/registerUser';
 
 export const Register: FC = () => {
@@ -11,10 +11,12 @@ export const Register: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuth);
+  const location = useLocation();
+  const from = location.state.from.pathname || '/profile';
 
   useEffect(() => {
     if (isAuth) {
-      navigate('/profile');
+      navigate(from, {replace: true});
     }
   }, [isAuth]);
 

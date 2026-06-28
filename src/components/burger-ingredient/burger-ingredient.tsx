@@ -17,7 +17,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
         dispatch(addBun(ingredient));
       } else {
         const id = uuidv4();
-        dispatch(addIngredient({ingredient, id}));
+        dispatch(addIngredient({ ingredient, id }));
       }
     };
 

@@ -12,11 +12,11 @@ export const Register: FC = () => {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuth);
   const location = useLocation();
-  const from = location.state.from.pathname || '/profile';
+  const from = location.state?.from?.pathname || '/profile';
 
   useEffect(() => {
     if (isAuth) {
-      navigate(from, {replace: true});
+      navigate(from, { replace: true });
     }
   }, [isAuth]);
 

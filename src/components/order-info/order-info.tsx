@@ -3,7 +3,12 @@ import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
 import { useDispatch, useSelector } from '../../services/store';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { getOrderByNumber } from '../../services/middlewares/getOrderByNumber';
 
 export const OrderInfo: FC = () => {
@@ -11,12 +16,12 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch();
   const order = useSelector((state) => state.orders.findedOrder)[0];
   const isLoading = useSelector((state) => state.orders.isLoading);
-   const location = useLocation();
-  const from = location.state.from.pathname ?? '/';
+  const location = useLocation();
+  const from = location.state?.from?.pathname ?? '/';
 
   useEffect(() => {
     dispatch(getOrderByNumber(Number(number)));
-  }, [])
+  }, []);
 
   const allIngredient = useSelector((state) => state.ingredients.ingredients);
 
@@ -69,7 +74,7 @@ export const OrderInfo: FC = () => {
     return <Preloader />;
   }
 
-  if(!orderInfo) return <Navigate to={from} replace />
+  if (!orderInfo) return <Navigate to={from} replace />;
 
   return <OrderInfoUI orderInfo={orderInfo} />;
 };

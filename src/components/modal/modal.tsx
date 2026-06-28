@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import { TModalProps } from './type';
 import { ModalUI } from '@ui';
+import { useLocation } from 'react-router-dom';
 
 const modalRoot = document.getElementById('modals');
 

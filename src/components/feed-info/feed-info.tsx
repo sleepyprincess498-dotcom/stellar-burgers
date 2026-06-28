@@ -12,7 +12,10 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
 
 export const FeedInfo: FC = () => {
   const orders: TOrder[] = useSelector((state) => state.orders.orders);
-  const feed = useSelector((state) => state.orders.orders);
+  const feed = {
+    total: useSelector((state) => state.orders.total),
+    totalToday: useSelector((state) => state.orders.totalToday)
+  };
 
   const readyOrders = getOrders(orders, 'done');
 

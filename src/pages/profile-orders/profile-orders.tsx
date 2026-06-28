@@ -7,14 +7,9 @@ import { getOrders } from '../../services/middlewares/getOrders';
 
 export const ProfileOrders: FC = () => {
   const orders: TOrder[] = useSelector((state) => state.orders.personalOrders);
-  const user = useSelector((state) => state.auth.user);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
     dispatch(getOrders());
   }, []);
 

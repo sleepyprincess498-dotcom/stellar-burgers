@@ -47,6 +47,11 @@ const mockIngredient3 = {
 };
 
 describe('тестирование ingredientsSlice', () => {
+  test('должен вернуть initialState при неизвестном экшене', () => {
+    const unknownAction = { type: 'UNKNOWN_ACTION' };
+    const state = reducer(initialState, unknownAction);
+    expect(state).toEqual(initialState);
+  });
   test('pendig - должен изменить состояние isLoading', () => {
     const state = reducer(initialState, { type: getIngredients.pending.type });
     expect(state.isLoading).toBe(true);

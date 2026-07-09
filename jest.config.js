@@ -200,6 +200,10 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   moduleNameMapper: {
-    '^@api$': '<rootDir>/src/utils/burger-api', // подставь свой реальный путь
+    '^@api$': '<rootDir>/src/utils/burger-api',
   },
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/tests/',
+  ],
 };

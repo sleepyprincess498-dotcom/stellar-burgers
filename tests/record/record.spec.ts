@@ -12,5 +12,5 @@ test('запись HAR ингредиентов', async ({ page }) => {
 
   await page.goto('/');
 
-  await responsePromise; // дожидаемся реального успешного ответа перед завершением теста
+  await responsePromise;
 });

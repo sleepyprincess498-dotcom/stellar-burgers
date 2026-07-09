@@ -84,34 +84,68 @@ describe('тестирование constructorSlice', () => {
     const state = reducer(startState, removeIngredient('1'));
     expect(state.ingredients).toEqual([])
   });
-  test('moveIngredientUp - должен переместить ингредиент выше в списке', () => {
-    const startState = {
-      ...initialState,
-      ingredients: [
-        { ...mockIngredient1, id: '1' },
-        { ...mockIngredient2, id: '2' },
-      ],
-    };
+  describe('тест moveIngregient', () => {
+    test('moveIngredientUp - должен переместить ингредиент выше в списке', () => {
+      const startState = {
+        ...initialState,
+        ingredients: [
+          { ...mockIngredient1, id: '1' },
+          { ...mockIngredient2, id: '2' },
+        ],
+      };
 
-    const state = reducer(startState, moveIngredientDown(0));
+      const state = reducer(startState, moveIngredientUp(1));
 
-    expect(state.ingredients[0].id).toBe('2');
-    expect(state.ingredients[1].id).toBe('1');
-  });
-  test('moveIngredientDown - должен переместить ингредиент ниже в списке', () => {
-    const startState = {
-      ...initialState,
-      ingredients: [
-        { ...mockIngredient1, id: '1' },
-        { ...mockIngredient2, id: '2' },
-      ],
-    };
+      expect(state.ingredients[0].id).toBe('2');
+      expect(state.ingredients[1].id).toBe('1');
+    });
 
-    const state = reducer(startState, moveIngredientDown(1));
+    test('moveIngredientUp - не должен ничего менять при index === 0', () => {
+      const startState = {
+        ...initialState,
+        ingredients: [
+          { ...mockIngredient1, id: '1' },
+          { ...mockIngredient2, id: '2' },
+        ],
+      };
 
-    expect(state.ingredients[0].id).toBe('1');
-    expect(state.ingredients[1].id).toBe('2');
-  });
+      const state = reducer(startState, moveIngredientUp(0));
+
+      expect(state.ingredients[0].id).toBe('1');
+      expect(state.ingredients[1].id).toBe('2');
+    });
+
+    test('moveIngredientDown - должен переместить ингредиент ниже в списке', () => {
+      const startState = {
+        ...initialState,
+        ingredients: [
+          { ...mockIngredient1, id: '1' },
+          { ...mockIngredient2, id: '2' },
+        ],
+      };
+
+      const state = reducer(startState, moveIngredientDown(0));
+
+      expect(state.ingredients[0].id).toBe('2');
+      expect(state.ingredients[1].id).toBe('1');
+    });
+
+    test('moveIngredientDown - не должен ничего менять при последнем index', () => {
+      const startState = {
+        ...initialState,
+        ingredients: [
+          { ...mockIngredient1, id: '1' },
+          { ...mockIngredient2, id: '2' },
+        ],
+      };
+
+      const state = reducer(startState, moveIngredientDown(1));
+
+      expect(state.ingredients[0].id).toBe('1');
+      expect(state.ingredients[1].id).toBe('2');
+    });
+  })
+
   test('clearConstructor - должен очистить список ингредиентов', () => {
     const startState = {
       bun: mockBun,

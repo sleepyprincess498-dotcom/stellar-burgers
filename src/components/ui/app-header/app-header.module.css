@@ -12,6 +12,7 @@
 .menu_part_left {
   display: flex;
   flex-basis: 35%;
+  white-space: nowrap;
 }
 
 .link {
@@ -28,10 +29,18 @@
   display: flex;
   justify-content: flex-end;
   flex-basis: 35%;
+  white-space: nowrap;
 }
 
 .logo {
   display: flex;
   align-items: center;
   margin: 0 auto;
+}
+
+.text_link {
+  display: flex;
+
+  color: inherit;
+  text-decoration: none;
 }

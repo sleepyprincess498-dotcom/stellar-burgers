@@ -39,12 +39,13 @@ export const LoginUI: FC<LoginUIProps> = ({
           </div>
           <div className='pb-6'>
             <PasswordInput
+              placeholder='password'
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               name='password'
             />
           </div>
-          <div className={`pb-6 ${styles.button}`}>
+          <div className={`pb-6 ${styles.button}`} data-testid='submit-container' >
             <Button type='primary' size='medium' htmlType='submit'>
               Войти
             </Button>
